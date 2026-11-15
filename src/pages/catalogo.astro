@@ -1,0 +1,180 @@
+---
+// src/pages/catalogo.astro — Catálogo con filtros client-side
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import CarCard from '@/components/ui/CarCard.astro';
+import CrossLink from '@/components/ui/CrossLink.astro';
+import Glyph from '@/components/ui/Glyph.astro';
+import { inventory, brands } from '@/data/inventory';
+import { whatsappLink } from '@/data/site';
+
+const title = 'Catálogo de carros usados premium en Bogotá | AutoCapital';
+const description =
+  'Explora nuestro inventario de carros usados premium: Mazda, Toyota, BMW, Mercedes-Benz, Volvo y más. Filtra por marca, año, precio y kilometraje.';
+
+const years = [...new Set(inventory.map((c) => c.year))].sort((a, b) => b - a);
+const priceSteps = [80, 100, 120, 150, 200, 250].map((m) => m * 1_000_000);
+const kmSteps = [10_000, 30_000, 50_000, 80_000, 120_000];
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: inventory.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Car',
+      name: c.name,
+      brand: { '@type': 'Brand', name: c.brand },
+      vehicleModelDate: String(c.year),
+      mileageFromOdometer: { '@type': 'QuantitativeValue', value: c.km, unitCode: 'KMT' },
+      offers: { '@type': 'Offer', price: c.priceCOP, priceCurrency: 'COP', availability: 'https://schema.org/InStock' },
+    },
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} jsonLd={itemList} waMessage="Hola AutoCapital, estoy viendo el catálogo y tengo una pregunta.">
+  <PageIntro
+    crumb="Catálogo"
+    heading="Inventario disponible"
+    intro="Vehículos seleccionados, con historial revisado y documentación al día. Si uno te interesa, escríbenos y te contamos todo."
+  />
+
+  <section class="catalog section--tight" aria-label="Vehículos">
+    <div class="container">
+      <form class="filters" data-filters aria-label="Filtrar vehículos">
+        <div class="field">
+          <label for="f-marca">Marca</label>
+          <select id="f-marca" name="marca">
+            <option value="">Todas</option>
+            {brands.map((b) => <option value={b}>{b}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-anio">Año desde</label>
+          <select id="f-anio" name="anio">
+            <option value="">Cualquiera</option>
+            {years.map((y) => <option value={y}>{y}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-precio">Precio hasta</label>
+          <select id="f-precio" name="precio">
+            <option value="">Sin límite</option>
+            {priceSteps.map((p) => <option value={p}>${(p / 1_000_000).toLocaleString('es-CO')} millones</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-km">Kilometraje hasta</label>
+          <select id="f-km" name="km">
+            <option value="">Sin límite</option>
+            {kmSteps.map((k) => <option value={k}>{k.toLocaleString('es-CO')} km</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-orden">Ordenar por</label>
+          <select id="f-orden" name="orden">
+            <option value="recientes">Año: más recientes</option>
+            <option value="precio-asc">Precio: menor a mayor</option>
+            <option value="precio-desc">Precio: mayor a menor</option>
+            <option value="km-asc">Menor kilometraje</option>
+          </select>
+        </div>
+      </form>
+
+      <div class="results-bar">
+        <p aria-live="polite" data-count><span class="num">{inventory.length}</span> vehículos</p>
+        <button type="button" class="reset" data-reset hidden>Limpiar filtros</button>
+      </div>
+
+      <div class="grid-cars" data-grid>
+        {inventory.map((car, i) => <CarCard car={car} priority={i === 0} headingLevel="h2" />)}
+      </div>
+
+      <div class="empty" data-empty hidden>
+        <p class="empty__title">No hay carros con esos filtros en este momento.</p>
+        <p>Cuéntanos qué buscas y te avisamos apenas llegue uno.</p>
+        <a class="btn btn--dark" href={whatsappLink('Hola AutoCapital, busco un carro que no encontré en el catálogo:')} target="_blank" rel="noopener">
+          <Glyph name="whatsapp" /> Avísenme por WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <CrossLink heading="¿No encuentras el que buscas?" text="Cuéntanos qué carro quieres y te avisamos cuando llegue." label="Escríbenos" href={whatsappLink('Hola AutoCapital, busco un carro específico:')} external />
+      <CrossLink heading="¿Necesitas financiación?" text="Calcula una cuota aproximada antes de decidir." label="Simular cuota" href="/financiacion" />
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-filters]');
+  const grid = document.querySelector<HTMLElement>('[data-grid]');
+  const count = document.querySelector<HTMLElement>('[data-count]');
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+  const reset = document.querySelector<HTMLButtonElement>('[data-reset]');
+
+  if (form && grid && count && empty && reset) {
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>('[data-car]'));
+    const num = (el: HTMLElement, k: string) => Number(el.dataset[k]);
+
+    const apply = () => {
+      const f = new FormData(form);
+      const marca = String(f.get('marca') ?? '');
+      const anio = Number(f.get('anio') || 0);
+      const precio = Number(f.get('precio') || Infinity);
+      const km = Number(f.get('km') || Infinity);
+      const orden = String(f.get('orden') ?? 'recientes');
+
+      const sorted = [...cards].sort((a, b) => {
+        if (orden === 'precio-asc') return num(a, 'price') - num(b, 'price');
+        if (orden === 'precio-desc') return num(b, 'price') - num(a, 'price');
+        if (orden === 'km-asc') return num(a, 'km') - num(b, 'km');
+        return num(b, 'year') - num(a, 'year');
+      });
+
+      let visible = 0;
+      sorted.forEach((c) => {
+        const ok = (!marca || c.dataset.brand === marca) && num(c, 'year') >= anio && num(c, 'price') <= precio && num(c, 'km') <= km;
+        c.hidden = !ok;
+        if (ok) visible++;
+        grid.appendChild(c);
+      });
+
+      count.innerHTML = `<span class="num">${visible}</span> ${visible === 1 ? 'vehículo' : 'vehículos'}`;
+      empty.hidden = visible > 0;
+      grid.hidden = visible === 0;
+      reset.hidden = !(marca || anio || f.get('precio') || f.get('km'));
+    };
+
+    form.addEventListener('change', apply);
+    reset.addEventListener('click', () => { form.reset(); apply(); });
+    apply();
+  }
+</script>
+
+<style>
+  .catalog { padding-top: clamp(2rem, 4vw, 3rem); }
+  .filters {
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: repeat(2, 1fr);
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  @media (min-width: 900px) { .filters { grid-template-columns: repeat(5, 1fr); } }
+  .filters .field:last-child { grid-column: 1 / -1; }
+  @media (min-width: 900px) { .filters .field:last-child { grid-column: auto; } }
+  .results-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.25rem; color: var(--color-ink-500); font-size: var(--text-small); }
+  .results-bar :global(.num) { color: var(--color-ink); font-weight: 560; }
+  .reset { color: var(--color-brand-ink); font-weight: 560; font-size: var(--text-small); text-decoration: underline; text-underline-offset: 0.2em; }
+  .grid-cars { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr)); }
+  @media (min-width: 1100px) { .grid-cars { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
+  .grid-cars[hidden], .empty[hidden] { display: none; }
+  .empty { display: grid; gap: 0.75rem; justify-items: start; padding: 3rem 0; max-width: 34rem; }
+  .empty__title { font-size: var(--text-h3); font-weight: 600; letter-spacing: -0.02em; }
+  .empty p:not(.empty__title) { color: var(--color-ink-500); }
+</style>

@@ -1,0 +1,111 @@
+---
+// src/components/ui/CarCard.astro
+// Ficha de vehículo: foto vertical, nombre, año · km, precio. CTA a WhatsApp.
+import Img from '@/components/ui/Img.astro';
+import Glyph from '@/components/ui/Glyph.astro';
+import type { Vehicle } from '@/data/inventory';
+import { whatsappLink } from '@/data/site';
+import { formatCOP, formatKm } from '@/lib/url';
+
+export interface Props {
+  car: Vehicle;
+  priority?: boolean;
+  headingLevel?: 'h2' | 'h3';
+}
+const { car, priority = false, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+const msg = `Hola AutoCapital, me interesa el ${car.name} ${car.year} (${formatKm(car.km)}, ${formatCOP(car.priceCOP)}). ¿Sigue disponible?`;
+---
+
+<article
+  class="car"
+  data-car
+  data-brand={car.brand}
+  data-year={car.year}
+  data-price={car.priceCOP}
+  data-km={car.km}
+>
+  <div class="car__media">
+    <Img
+      src={car.image}
+      alt={`${car.name} ${car.year}`}
+      sizes="(min-width: 1100px) 360px, (min-width: 640px) 45vw, 92vw"
+      widths={[360, 540, 768]}
+      priority={priority}
+      class="car__img"
+    />
+  </div>
+  <div class="car__body">
+    <p class="car__brand">{car.brand}</p>
+    <H class="car__name">{car.name.replace(car.brand, '').trim() || car.name}</H>
+    <dl class="car__meta num">
+      <div><dt class="sr-only">Año</dt><dd>{car.year}</dd></div>
+      <div><dt class="sr-only">Kilometraje</dt><dd>{formatKm(car.km)}</dd></div>
+    </dl>
+    <div class="car__foot">
+      <p class="car__price num"><span class="sr-only">Precio: </span>{formatCOP(car.priceCOP)}</p>
+      <a href={whatsappLink(msg)} class="car__cta" target="_blank" rel="noopener">
+        Me interesa <Glyph name="arrow" />
+        <span class="sr-only"> el {car.name} {car.year}</span>
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .car {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-paper);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    transition: border-color 0.3s var(--ease-out), box-shadow 0.4s var(--ease-out);
+  }
+  .car[hidden] { display: none; }
+  .car:hover { border-color: #bdbab1; box-shadow: var(--shadow-md); }
+  .car__media {
+    aspect-ratio: 4 / 4.6;
+    overflow: hidden;
+    background: #0e1422;
+  }
+  .car__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 62%;
+    transition: transform 0.9s var(--ease-out);
+  }
+  .car:hover .car__media :global(img) { transform: scale(1.035); }
+  .car__body { display: flex; flex-direction: column; gap: 0.35rem; padding: 1rem 1.1rem 1.1rem; flex: 1; }
+  .car__brand { font-size: var(--text-xs); font-weight: 560; color: var(--color-ink-500); }
+  .car__name { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.015em; line-height: 1.25; }
+  .car__meta { display: flex; gap: 0.9rem; font-size: 0.82rem; color: var(--color-ink-500); }
+  .car__meta div + div { padding-left: 0.9rem; border-left: 1px solid var(--color-line); }
+  .car__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--color-line);
+    margin-top: 0.85rem;
+  }
+  .car__price { font-size: 1.12rem; font-weight: 560; color: var(--color-ink); }
+  .car__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.88rem;
+    font-weight: 560;
+    color: var(--color-brand-ink);
+    white-space: nowrap;
+  }
+  .car__cta :global(svg) { width: 1rem; height: 1rem; transition: transform 0.3s var(--ease-out); }
+  .car__cta:hover { color: var(--color-ink); }
+  .car__cta:hover :global(svg) { transform: translateX(3px); }
+  /* Toda la ficha clicable hacia WhatsApp */
+  .car__cta::after { content: ''; position: absolute; inset: 0; }
+</style>

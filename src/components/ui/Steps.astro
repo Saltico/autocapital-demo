@@ -1,0 +1,56 @@
+---
+// src/components/ui/Steps.astro
+// Proceso secuencial (aquí la numeración sí comunica orden).
+export interface Props {
+  heading: string;
+  lead?: string;
+  items: { title: string; text: string }[];
+  dark?: boolean;
+}
+const { heading, lead, items, dark = false } = Astro.props;
+---
+<section class:list={['section', dark && 'section--dark on-dark']}>
+  <div class="container">
+    <div class="section-head reveal">
+      <h2>{heading}</h2>
+      {lead && <p>{lead}</p>}
+    </div>
+    <ol class="steps">
+      {items.map((s, i) => (
+        <li class="steps__item reveal" style={`transition-delay:${i * 70}ms`}>
+          <span class="steps__n num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .steps {
+    list-style: none;
+    display: grid;
+    gap: 0;
+    counter-reset: step;
+  }
+  @media (min-width: 720px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .steps { grid-template-columns: repeat(4, 1fr); } }
+  .steps__item {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    padding: 1.6rem 1.5rem 1.8rem 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .on-dark .steps__item { border-top-color: var(--color-line-dark); }
+  @media (min-width: 1100px) {
+    .steps__item + .steps__item { padding-left: 1.5rem; border-left: 1px solid var(--color-line); }
+    .on-dark .steps__item + .steps__item { border-left-color: var(--color-line-dark); }
+  }
+  .steps__n { font-size: 0.82rem; color: var(--color-brand-ink); font-weight: 500; }
+  .on-dark .steps__n { color: #f07a5f; }
+  .steps__item h3 { font-size: 1.25rem; }
+  .steps__item p { color: var(--color-ink-500); font-size: 0.97rem; max-width: 30ch; }
+  .on-dark .steps__item p { color: var(--color-on-dark-muted); }
+</style>

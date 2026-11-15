@@ -1,0 +1,108 @@
+---
+// src/components/layout/Footer.astro
+// Pie de página: marca + servicios + contacto + legales.
+import Glyph from '@/components/ui/Glyph.astro';
+import { siteBrand, footerData, socialLinks, phoneDisplay, whatsappLink } from '@/data/site';
+import { href } from '@/lib/url';
+
+export interface Props {
+  showConsentPreferences?: boolean;
+  consentPreferencesLabel?: string;
+}
+const { showConsentPreferences = false, consentPreferencesLabel = 'Preferencias de cookies' } = Astro.props;
+const year = new Date().getFullYear();
+const ig = socialLinks.find((s) => s.platform === 'instagram');
+---
+
+<footer class="footer on-dark">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <a href={href('/')} aria-label={`${siteBrand.name}, ir al inicio`} class="footer__logo">
+        <img src={href(siteBrand.logoUrl)} alt={siteBrand.name} width="509" height="248" loading="lazy" />
+      </a>
+      <p>Concesionario digital con sede en Bogotá. Compra, venta, consignación y financiación de carros premium, con entregas en toda Colombia.</p>
+    </div>
+
+    <div>
+      <h2 class="footer__title">Servicios</h2>
+      <ul class="footer__list">
+        {footerData.services.map((l) => <li><a href={href(l.url)}>{l.label}</a></li>)}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="footer__title">Contacto</h2>
+      <ul class="footer__list">
+        <li>
+          <a href={whatsappLink('Hola AutoCapital, quiero más información.')} target="_blank" rel="noopener" class="footer__icon-link">
+            <Glyph name="whatsapp" /> <span class="num">{phoneDisplay}</span>
+          </a>
+        </li>
+        {ig && (
+          <li>
+            <a href={ig.url} target="_blank" rel="noopener" class="footer__icon-link">
+              <Glyph name="instagram" /> @autocapital.co
+            </a>
+          </li>
+        )}
+        <li class="footer__muted">Atención 100% digital · Bogotá, Colombia</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer__bottom">
+    <p>© {year} {siteBrand.name}</p>
+    <ul>
+      {footerData.legal.map((l) => <li><a href={l.url}>{l.label}</a></li>)}
+      {showConsentPreferences && (
+        <li><button type="button" data-consent-open class="footer__consent">{consentPreferencesLabel}</button></li>
+      )}
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-graphite);
+    color: var(--color-on-dark);
+    padding-top: clamp(3.5rem, 7vw, 5.5rem);
+  }
+  .footer__grid {
+    display: grid;
+    gap: 2.5rem;
+    padding-bottom: 3rem;
+  }
+  @media (min-width: 768px) {
+    .footer__grid { grid-template-columns: 1.6fr 1fr 1.2fr; gap: 3rem; }
+  }
+  .footer__logo img { height: 52px; width: auto; }
+  .footer__brand { display: grid; gap: 1.25rem; align-content: start; max-width: 26rem; }
+  .footer__brand p { color: var(--color-on-dark-muted); font-size: var(--text-small); line-height: 1.65; }
+  .footer__title {
+    font-size: var(--text-small);
+    font-weight: 560;
+    letter-spacing: 0;
+    color: var(--color-on-dark-muted);
+    margin-bottom: 1rem;
+  }
+  .footer__list { list-style: none; display: grid; gap: 0.7rem; }
+  .footer__list a { color: var(--color-on-dark); font-size: 0.97rem; }
+  .footer__list a:hover { color: #fff; text-decoration: underline; }
+  .footer__icon-link { display: inline-flex; align-items: center; gap: 0.55rem; }
+  .footer__icon-link :global(svg) { width: 1.1rem; height: 1.1rem; color: var(--color-on-dark-muted); }
+  .footer__muted { color: var(--color-on-dark-muted); font-size: var(--text-small); }
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--color-line-dark);
+    font-size: var(--text-xs);
+    color: var(--color-on-dark-muted);
+  }
+  .footer__bottom ul { list-style: none; display: flex; flex-wrap: wrap; gap: 1.25rem; }
+  .footer__bottom a, .footer__consent { color: var(--color-on-dark-muted); font-size: var(--text-xs); }
+  .footer__bottom a:hover, .footer__consent:hover { color: var(--color-on-dark); }
+  .footer__consent { text-decoration: underline; }
+</style>

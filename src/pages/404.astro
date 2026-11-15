@@ -1,0 +1,27 @@
+---
+// src/pages/404.astro
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Glyph from '@/components/ui/Glyph.astro';
+import { href } from '@/lib/url';
+---
+
+<BaseLayout title="Página no encontrada | AutoCapital" description="La página que buscas no existe o cambió de dirección." noindex>
+  <section class="section nf">
+    <div class="container nf__inner">
+      <p class="num nf__code">404</p>
+      <h1>Esta página tomó otra ruta</h1>
+      <p>La dirección no existe o cambió. Puedes seguir por aquí:</p>
+      <div class="nf__actions">
+        <a href={href('/catalogo')} class="btn btn--primary">Ver catálogo <Glyph name="arrow" /></a>
+        <a href={href('/')} class="btn btn--line">Ir al inicio</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf__inner { display: grid; gap: 1.1rem; justify-items: start; max-width: 40rem; }
+  .nf__code { color: var(--color-brand-ink); font-size: var(--text-small); }
+  .nf p:not(.nf__code) { color: var(--color-ink-500); font-size: var(--text-lead); }
+  .nf__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+</style>

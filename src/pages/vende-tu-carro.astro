@@ -1,0 +1,291 @@
+---
+// src/pages/vende-tu-carro.astro — Venta directa: "Compramos tu carro" (cotizador en 3 pasos)
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import CrossLink from '@/components/ui/CrossLink.astro';
+import Glyph from '@/components/ui/Glyph.astro';
+import { whatsappNumber } from '@/data/site';
+
+const title = 'Vende tu carro rápido y a precio justo | AutoCapital';
+const description =
+  'Compramos tu carro: cuéntanos marca, año y kilometraje, recibe una oferta sin compromiso y te pagamos en pocos días. Proceso 100% digital y seguro.';
+
+const marcas = ['Audi', 'BMW', 'Chevrolet', 'Ford', 'Honda', 'Hyundai', 'Jeep', 'Kia', 'Land Rover', 'Mazda', 'Mercedes-Benz', 'MINI', 'Mitsubishi', 'Nissan', 'Porsche', 'Renault', 'Subaru', 'Toyota', 'Volkswagen', 'Volvo', 'Otra'];
+const thisYear = new Date().getFullYear();
+const anios = Array.from({ length: 16 }, (_, i) => thisYear - i);
+
+const benefits = [
+  { title: 'Precio justo', text: 'Oferta basada en el mercado real, explicada con claridad.' },
+  { title: 'Pago rápido', text: 'En pocos días tienes el dinero en tu cuenta.' },
+  { title: 'Cero trámites para ti', text: 'Nos encargamos del traspaso y la documentación.' },
+];
+---
+
+<BaseLayout title={title} description={description} waMessage="Hola AutoCapital, quiero vender mi carro.">
+  <PageIntro
+    crumb="Vende tu carro"
+    heading="¿Cuánto vale tu carro?"
+    intro="Cuéntanos qué carro es y te contactamos con una oferta. Sin compromiso, sin regateo eterno."
+  />
+
+  <section class="section quote-sec" aria-labelledby="cotiza-h">
+    <div class="container">
+      <h2 id="cotiza-h" class="sr-only">Cotiza en 3 pasos</h2>
+      <div class="wizard" data-wizard>
+        <form class="wizard__form" data-wa-form data-wa-number={whatsappNumber} data-wa-intro="Hola AutoCapital, quiero vender mi carro. Estos son los datos:" novalidate>
+          <ol class="wizard__progress" aria-hidden="true">
+            <li class="is-current" data-dot="0"><span class="num">01</span> Tu carro</li>
+            <li data-dot="1"><span class="num">02</span> Cómo está</li>
+            <li data-dot="2"><span class="num">03</span> Tú</li>
+          </ol>
+
+          <fieldset class="wizard__step" data-step="0">
+            <legend>Tu carro</legend>
+            <div class="wizard__fields">
+              <div class="field">
+                <label for="v-marca">Marca</label>
+                <select id="v-marca" name="marca" required data-sum="marca">
+                  <option value="">Selecciona</option>
+                  {marcas.map((m) => <option>{m}</option>)}
+                </select>
+              </div>
+              <div class="field">
+                <label for="v-anio">Año</label>
+                <select id="v-anio" name="anio" required data-sum="anio" data-label="Año">
+                  <option value="">Selecciona</option>
+                  {anios.map((a) => <option>{a}</option>)}
+                  <option value="anterior">{thisYear - 16} o anterior</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="v-modelo">Modelo</label>
+                <input id="v-modelo" name="modelo" required placeholder="Ej.: CX-30" data-sum="modelo" />
+              </div>
+              <div class="field">
+                <label for="v-version">Versión (opcional)</label>
+                <input id="v-version" name="version" placeholder="Ej.: Touring AT" data-sum="version" />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="wizard__step" data-step="1">
+            <legend>Cómo está</legend>
+            <div class="wizard__fields">
+              <div class="field">
+                <label for="v-km">Kilometraje</label>
+                <input id="v-km" name="km" required inputmode="numeric" placeholder="Ej.: 45000" data-sum="km" data-label="Kilometraje" />
+              </div>
+              <div class="field">
+                <label for="v-duenos">Número de dueños</label>
+                <select id="v-duenos" name="duenos" required data-label="Dueños">
+                  <option value="">Selecciona</option>
+                  <option>Único dueño</option>
+                  <option>2 dueños</option>
+                  <option>3 o más</option>
+                </select>
+              </div>
+              <fieldset class="field wizard__wide">
+                <legend class="label">Estado general</legend>
+                <div class="chips">
+                  {['Como nuevo', 'Bueno', 'Con detalles'].map((o, i) => (
+                    <label class="chip"><input type="radio" name="estado" value={o} data-label="Estado" checked={i === 1} data-sum="estado" /><span>{o}</span></label>
+                  ))}
+                </div>
+              </fieldset>
+            </div>
+          </fieldset>
+
+          <fieldset class="wizard__step" data-step="2">
+            <legend>Tus datos</legend>
+            <div class="wizard__fields">
+              <div class="field">
+                <label for="v-nombre">Nombre</label>
+                <input id="v-nombre" name="nombre" autocomplete="name" required />
+              </div>
+              <div class="field">
+                <label for="v-tel">Teléfono / WhatsApp</label>
+                <input id="v-tel" name="telefono" type="tel" autocomplete="tel" inputmode="tel" required />
+              </div>
+              <div class="field wizard__wide">
+                <label for="v-ciudad">Ciudad</label>
+                <input id="v-ciudad" name="ciudad" autocomplete="address-level2" required placeholder="Ej.: Bogotá" />
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="wizard__nav">
+            <button type="button" class="btn btn--line" data-prev hidden><Glyph name="back" /> Atrás</button>
+            <button type="button" class="btn btn--dark" data-next hidden>Continuar <Glyph name="arrow" /></button>
+            <button type="submit" class="btn btn--primary" data-submit><Glyph name="whatsapp" /> Recibir mi oferta</button>
+          </div>
+          <p class="form-note">Te escribimos por WhatsApp con la oferta. Tus datos se usan solo para esta cotización.</p>
+          <p class="form-ok" data-wa-status hidden role="status"></p>
+        </form>
+
+        <aside class="summary" aria-label="Resumen de tu carro">
+          <p class="summary__label">Tu carro</p>
+          <p class="summary__name" data-sum-name>Aquí va apareciendo tu carro a medida que lo cuentas.</p>
+          <dl class="summary__list">
+            <div><dt>Año</dt><dd class="num" data-sum-out="anio">—</dd></div>
+            <div><dt>Versión</dt><dd data-sum-out="version">—</dd></div>
+            <div><dt>Kilometraje</dt><dd class="num" data-sum-out="km">—</dd></div>
+            <div><dt>Estado</dt><dd data-sum-out="estado">—</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper" aria-labelledby="por-que-h">
+    <div class="container why">
+      <h2 id="por-que-h" class="reveal">Por qué vendernos tu carro</h2>
+      <dl class="why__list">
+        {benefits.map((b) => (
+          <div class="reveal"><dt>{b.title}</dt><dd>{b.text}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <figure class="single-quote reveal">
+        <blockquote><p>“Vendí mi Kia Sportage 2021 con AutoCapital. Me ofrecieron un precio justo y en pocos días ya tenía el dinero en mi cuenta.”</p></blockquote>
+        <figcaption>Venta sencilla y justa · Cliente AutoCapital</figcaption>
+      </figure>
+      <CrossLink heading="¿Quieres obtener más por tu carro?" text="Con la consignación lo vendemos por ti a precio de mercado." label="Conoce la consignación" href="/consignacion" />
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { initWaForms } from '@/lib/waForm';
+
+  const root = document.querySelector<HTMLElement>('[data-wizard]');
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('form')!;
+    const steps = Array.from(form.querySelectorAll<HTMLFieldSetElement>('[data-step]'));
+    const dots = Array.from(form.querySelectorAll<HTMLElement>('[data-dot]'));
+    const prev = form.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = form.querySelector<HTMLButtonElement>('[data-next]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    let current = 0;
+
+    root.classList.add('is-enhanced');
+    form.noValidate = false;
+
+    const show = (i: number) => {
+      current = i;
+      steps.forEach((s, k) => (s.hidden = k !== i));
+      dots.forEach((d, k) => {
+        d.classList.toggle('is-current', k === i);
+        d.classList.toggle('is-done', k < i);
+      });
+      prev.hidden = i === 0;
+      next.hidden = i === steps.length - 1;
+      submit.hidden = i !== steps.length - 1;
+    };
+
+    const stepValid = () => {
+      const fields = steps[current].querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select');
+      for (const f of fields) if (!f.checkValidity()) { f.reportValidity(); return false; }
+      return true;
+    };
+
+    next.addEventListener('click', () => {
+      if (!stepValid()) return;
+      show(current + 1);
+      steps[current].querySelector<HTMLElement>('input, select')?.focus();
+    });
+    prev.addEventListener('click', () => show(current - 1));
+
+    // Resumen en vivo
+    const name = root.querySelector<HTMLElement>('[data-sum-name]')!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-sum-out="${k}"]`);
+    const val = (k: string) => {
+      const el = form.querySelector<HTMLInputElement>(`[data-sum="${k}"]:checked`) ?? form.querySelector<HTMLInputElement>(`[data-sum="${k}"]:not([type=radio])`);
+      return el?.value?.trim() ?? '';
+    };
+    const update = () => {
+      const marca = val('marca');
+      const modelo = val('modelo');
+      if (marca || modelo) { name.textContent = [marca, modelo].filter(Boolean).join(' '); name.classList.add('is-filled'); }
+      const km = val('km').replace(/\D/g, '');
+      out('anio')!.textContent = val('anio') || '—';
+      out('version')!.textContent = val('version') || '—';
+      out('km')!.textContent = km ? Number(km).toLocaleString('es-CO') + ' km' : '—';
+      out('estado')!.textContent = val('estado') || '—';
+    };
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+
+    show(0);
+    update();
+  }
+  initWaForms();
+</script>
+
+<style>
+  .quote-sec { padding-top: clamp(2.5rem, 5vw, 4rem); }
+  .wizard { display: grid; gap: 2rem; align-items: start; }
+  @media (min-width: 1024px) { .wizard { grid-template-columns: 1.5fr 1fr; gap: 3.5rem; } }
+
+  .wizard__form { display: grid; gap: 1.5rem; }
+  .wizard__progress { display: none; list-style: none; gap: 0; border-bottom: 1px solid var(--color-line); }
+  .is-enhanced .wizard__progress { display: flex; }
+  .wizard__progress li { flex: 1; display: flex; align-items: center; gap: 0.5rem; padding: 0 0 0.9rem; font-size: var(--text-small); color: var(--color-ink-500); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.3s var(--ease-out), border-color 0.3s var(--ease-out); }
+  .wizard__progress li.is-current { color: var(--color-ink); border-bottom-color: var(--color-brand); font-weight: 560; }
+  .wizard__progress li.is-done { color: var(--color-ink-700); border-bottom-color: var(--color-ink); }
+  .wizard__progress .num { font-size: 0.78rem; }
+
+  .wizard__step { border: 0; min-width: 0; display: grid; gap: 1.25rem; }
+  .wizard__step[hidden] { display: none; }
+  .wizard__step + .wizard__step { padding-top: 1.5rem; border-top: 1px solid var(--color-line); }
+  .is-enhanced .wizard__step + .wizard__step { padding-top: 0; border-top: 0; }
+  .wizard__step > legend { font-size: var(--text-h3); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
+  .is-enhanced .wizard__step > legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+  .wizard__fields { display: grid; gap: 1.1rem; }
+  @media (min-width: 640px) { .wizard__fields { grid-template-columns: 1fr 1fr; } .wizard__wide { grid-column: 1 / -1; } }
+  fieldset.field { border: 0; min-width: 0; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip { position: relative; cursor: pointer; }
+  .chip input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .chip span { display: inline-flex; align-items: center; height: 2.75rem; padding: 0 1.15rem; border: 1px solid var(--color-line); border-radius: var(--radius-sm); background: var(--color-paper); font-size: 0.95rem; transition: all 0.2s var(--ease-out); }
+  .chip:hover span { border-color: #b3b0a7; }
+  .chip input:checked + span { background: var(--color-ink); color: var(--color-surface); border-color: var(--color-ink); }
+  .chip input:focus-visible + span { outline: 2px solid var(--color-brand); outline-offset: 2px; }
+
+  .wizard__nav { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .wizard__nav [hidden] { display: none; }
+  .form-ok { font-size: var(--text-small); color: var(--color-success); }
+
+  .summary {
+    position: sticky;
+    top: 104px;
+    display: grid;
+    gap: 1rem;
+    padding: 1.6rem;
+    border-radius: var(--radius-md);
+    background: var(--color-graphite);
+    color: var(--color-on-dark);
+  }
+  .summary__label { font-size: var(--text-xs); color: var(--color-on-dark-muted); }
+  .summary__name { font-size: 1.05rem; color: var(--color-on-dark-muted); line-height: 1.4; min-height: 2.8em; }
+  .summary__name.is-filled { font-size: clamp(1.5rem, 2.4vw, 2rem); color: var(--color-on-dark); font-weight: 600; letter-spacing: -0.025em; line-height: 1.1; }
+  .summary__list div { display: flex; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-top: 1px solid var(--color-line-dark); font-size: 0.95rem; }
+  .summary__list dt { color: var(--color-on-dark-muted); }
+  @media (max-width: 1023px) { .summary { position: static; order: -1; } .summary__list { display: none; } }
+
+  .why { display: grid; gap: 2.5rem; }
+  @media (min-width: 1024px) { .why { grid-template-columns: 0.8fr 1.2fr; gap: 5rem; } }
+  .why__list { display: grid; }
+  .why__list div { display: grid; gap: 0.35rem; padding: 1.4rem 0; border-top: 1px solid var(--color-line); }
+  @media (min-width: 640px) { .why__list div { grid-template-columns: 14rem 1fr; gap: 2rem; } }
+  .why__list dt { font-weight: 600; font-size: 1.15rem; letter-spacing: -0.015em; }
+  .why__list dd { color: var(--color-ink-500); }
+
+  .single-quote { display: grid; gap: 1rem; max-width: 52rem; margin-bottom: clamp(3rem, 6vw, 5rem); }
+  .single-quote p { font-size: clamp(1.4rem, 2.6vw, 2.1rem); line-height: 1.3; letter-spacing: -0.02em; font-weight: 500; }
+  .single-quote figcaption { color: var(--color-ink-500); font-size: var(--text-small); }
+</style>

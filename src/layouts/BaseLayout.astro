@@ -1,0 +1,182 @@
+---
+// src/layouts/BaseLayout.astro
+// Canonical layout for the entire site. All shared data imported from
+// @/data/site.ts and distributed to components via props.
+
+import '@/styles/base.css';
+import fontSans from '@/assets/fonts/geist-latin-wght-normal.woff2?url';
+import fontMono from '@/assets/fonts/geist-mono-latin-wght-normal.woff2?url';
+import type { BreadcrumbItem } from '@/types/seo';
+import SkipLink from '@/components/layout/SkipLink.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import SEO from '@/components/seo/SEO.astro';
+import GTM from '@/components/analytics/GTM.astro';
+import GA4 from '@/components/analytics/GA4.astro';
+import ConsentBanner from '@/components/analytics/ConsentBanner.astro';
+import Glyph from '@/components/ui/Glyph.astro';
+import { organizationSchema, websiteSchema, getSiteUrl } from '@/lib/seo';
+import { siteLanguage, navigationData, whatsappLink } from '@/data/site';
+import { href } from '@/lib/url';
+import { initAnalytics } from '@/lib/analytics';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  noindex?: boolean;
+  breadcrumbs?: BreadcrumbItem[];
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  lang?: string;
+  headerVariant?: 'solid' | 'overlay';
+  /** Mensaje del botón flotante de WhatsApp */
+  waMessage?: string;
+}
+
+const {
+  title,
+  description,
+  canonical: canonicalProp,
+  ogImage = getSiteUrl(href('/img/og-default.jpg')),
+  noindex = false,
+  jsonLd,
+  lang: pageLang,
+  headerVariant = 'solid',
+  waMessage = 'Hola AutoCapital, quiero más información.',
+} = Astro.props;
+
+// Canonical sin .html ni /index (build format 'file' en GitHub Pages), sin slash final.
+const cleanPath = Astro.url.pathname.replace(/(?:\/index)?\.html$/, '').replace(/(.)\/$/, '$1');
+const canonical = canonicalProp ?? getSiteUrl(cleanPath);
+const htmlLang = pageLang ?? siteLanguage;
+
+// Demo de propuesta: noindex global vía PUBLIC_NOINDEX (spec seo.robots = noindex, nofollow)
+const demoNoindex = import.meta.env.PUBLIC_NOINDEX === 'true';
+const robots = demoNoindex ? 'noindex, nofollow' : undefined;
+
+// Analytics IDs from env vars
+const gtmId = import.meta.env.PUBLIC_GTM_ID;
+const ga4Id = import.meta.env.PUBLIC_GA4_ID;
+// GTM takes priority: if PUBLIC_GTM_ID is set, direct GA4 (gtag.js) is NOT injected.
+const hasAnalytics = Boolean(gtmId || ga4Id);
+const useDirectGa4 = Boolean(ga4Id) && !gtmId;
+
+// Base JSON-LD schemas injected on every page
+const baseSchemas = [organizationSchema(), websiteSchema()];
+const pageSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const allSchemas = [...baseSchemas, ...pageSchemas];
+---
+
+<!doctype html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0C1322" />
+    <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
+
+    <!-- Consent Mode v2 default (only when analytics is configured; before GTM/GA4). Single source of truth. -->
+    {hasAnalytics && (
+      <script is:inline>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent', 'default', {
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied',
+          analytics_storage: 'denied',
+          wait_for_update: 500,
+        });
+      </script>
+    )}
+
+    {gtmId && <GTM gtmId={gtmId} />}
+    {useDirectGa4 && <GA4 ga4Id={ga4Id} />}
+
+    <!-- SEO component (INMUTABLE — do not modify) -->
+    <SEO
+      title={title}
+      description={description}
+      canonical={canonical}
+      ogImage={ogImage}
+      noindex={noindex && !demoNoindex}
+      robots={robots}
+      jsonLd={allSchemas}
+      lang={htmlLang}
+    />
+
+    {ogImage === getSiteUrl(href('/img/og-default.jpg')) && (
+      <>
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/jpeg" />
+      </>
+    )}
+
+    <link rel="preload" as="font" type="font/woff2" href={fontSans} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={fontMono} crossorigin />
+
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <script>
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => entries.forEach((e) => {
+            if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+          }),
+          { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+        );
+        document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+      } else {
+        document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
+      }
+    </script>
+
+    <slot name="head" />
+  </head>
+  <body>
+    {hasAnalytics && <ConsentBanner />}
+
+    <SkipLink targetId="main-content" />
+
+    <Header items={navigationData} variant={headerVariant} />
+
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+
+    <Footer showConsentPreferences={hasAnalytics} />
+
+    <a href={whatsappLink(waMessage)} class="wa-float" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+      <Glyph name="whatsapp" />
+    </a>
+
+    <script>
+      initAnalytics();
+    </script>
+  </body>
+</html>
+
+<style>
+  main { min-height: 60vh; }
+  main:focus { outline: none; }
+
+  .wa-float {
+    position: fixed;
+    right: clamp(1rem, 2.5vw, 1.75rem);
+    bottom: clamp(1rem, 2.5vw, 1.75rem);
+    z-index: 90;
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: #1b7a50;
+    color: #fff;
+    box-shadow: 0 10px 28px -10px rgba(12, 19, 34, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+    transition: transform 0.3s var(--ease-out), background-color 0.2s var(--ease-out);
+  }
+  .wa-float:hover { transform: translateY(-2px); background: #15633f; color: #fff; }
+  .wa-float :global(svg) { width: 1.6rem; height: 1.6rem; }
+</style>

@@ -1,0 +1,171 @@
+---
+// src/pages/consignacion.astro — Consignación: lo vendemos por ti
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import Steps from '@/components/ui/Steps.astro';
+import CrossLink from '@/components/ui/CrossLink.astro';
+import Glyph from '@/components/ui/Glyph.astro';
+import { whatsappNumber } from '@/data/site';
+import { href } from '@/lib/url';
+
+const title = 'Consigna tu carro en Bogotá y véndelo mejor | AutoCapital';
+const description =
+  'Deja tu carro en consignación con AutoCapital: lo valoramos, lo publicamos y negociamos por ti para que obtengas un mejor precio, sin perder tiempo.';
+
+const steps = [
+  { title: 'Valoración', text: 'Revisamos tu carro y acordamos contigo un precio de venta realista según el mercado.' },
+  { title: 'Preparación y publicación', text: 'Fotografía profesional, ficha completa y publicación en nuestro catálogo y canales.' },
+  { title: 'Negociación', text: 'Atendemos a los interesados, filtramos y negociamos. Tú decides si aceptas la oferta.' },
+  { title: 'Traspaso y pago', text: 'Gestionamos el traspaso y la documentación. Recibes tu dinero de forma segura.' },
+];
+
+const rows = [
+  { label: 'Precio', a: 'Más alto, a precio de mercado', b: 'Oferta inmediata' },
+  { label: 'Tiempo', a: 'Depende de la demanda', b: 'Pago en pocos días' },
+  { label: 'Tu esfuerzo', a: 'Ninguno: lo hacemos por ti', b: 'Ninguno' },
+];
+
+const requirements = [
+  'Tarjeta de propiedad a tu nombre',
+  'SOAT y revisión técnico-mecánica vigentes',
+  'Impuestos al día y sin comparendos pendientes',
+  'Copia de tu documento de identidad',
+];
+
+// Respuestas pendientes de confirmar con AutoCapital (marcadas en la demo)
+const faqs = [
+  { q: '¿Cuánto cobran por consignar?', a: 'Pendiente de confirmar con AutoCapital: comisión sobre el valor de venta.' },
+  { q: '¿Puedo seguir usando mi carro mientras se vende?', a: 'Pendiente de confirmar con AutoCapital: política de exhibición y uso.' },
+  { q: '¿Reciben carros de fuera de Bogotá?', a: 'Pendiente de confirmar con AutoCapital: cobertura de recepción.' },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'Cómo consignar tu carro con AutoCapital',
+  step: steps.map((s, i) => ({ '@type': 'HowToStep', position: i + 1, name: s.title, text: s.text })),
+};
+---
+
+<BaseLayout title={title} description={description} jsonLd={faqSchema} waMessage="Hola AutoCapital, quiero consignar mi carro.">
+  <PageIntro
+    crumb="Consignación"
+    heading="Lo vendemos por ti, al mejor precio"
+    intro="¿Estás vendiendo tu vehículo? Déjalo en nuestras manos: lo mostramos, filtramos compradores y negociamos."
+    image="car-bmw-m240i.jpg"
+    imageAlt="BMW M240i 2024 en el showroom de AutoCapital"
+    imagePosition="50% 62%"
+  >
+    <a href="#formulario" class="btn btn--primary">Consignar mi carro <Glyph name="arrow" /></a>
+  </PageIntro>
+
+  <Steps heading="Cómo funciona" lead="Cuatro pasos y tú solo apareces al principio y al final." items={steps} />
+
+  <section class="section section--paper" aria-labelledby="comparar-h">
+    <div class="container compare">
+      <div class="compare__head reveal">
+        <h2 id="comparar-h">¿Consignar o vender directo?</h2>
+        <p>Si te importa más el precio, consigna. Si te importa más la rapidez, te lo compramos.</p>
+        <a href={href('/vende-tu-carro')} class="link-arrow">Prefiero vender directo <Glyph name="arrow" /></a>
+      </div>
+      <div class="compare__table reveal" role="region" aria-labelledby="comparar-h" tabindex="0">
+        <table>
+          <thead>
+            <tr><td></td><th scope="col">Consignación</th><th scope="col">Venta directa</th></tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr><th scope="row">{r.label}</th><td>{r.a}</td><td>{r.b}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="formulario" aria-labelledby="form-h">
+    <div class="container consign">
+      <div class="consign__req reveal">
+        <h2 id="form-h">Cuéntanos de tu carro</h2>
+        <p class="consign__lead">Con estos datos te damos una valoración inicial y agendamos la revisión.</p>
+        <h3>Qué necesitas</h3>
+        <ul>
+          {requirements.map((r) => <li><Glyph name="check" /> {r}</li>)}
+        </ul>
+      </div>
+      <form class="consign__form reveal" data-wa-form data-wa-number={whatsappNumber} data-wa-intro="Hola AutoCapital, quiero consignar mi carro:">
+        <div class="field"><label for="k-marca">Marca</label><input id="k-marca" name="marca" required placeholder="Ej.: Mazda" /></div>
+        <div class="field"><label for="k-modelo">Modelo</label><input id="k-modelo" name="modelo" required placeholder="Ej.: CX-30 Touring" /></div>
+        <div class="field"><label for="k-anio">Año</label><input id="k-anio" name="anio" required inputmode="numeric" maxlength="4" placeholder="2021" data-label="Año" /></div>
+        <div class="field"><label for="k-km">Kilometraje</label><input id="k-km" name="km" required inputmode="numeric" placeholder="45000" data-label="Kilometraje" /></div>
+        <div class="field"><label for="k-ciudad">Ciudad</label><input id="k-ciudad" name="ciudad" required autocomplete="address-level2" placeholder="Bogotá" /></div>
+        <div class="field"><label for="k-nombre">Nombre</label><input id="k-nombre" name="nombre" required autocomplete="name" /></div>
+        <div class="field consign__wide"><label for="k-tel">Teléfono / WhatsApp</label><input id="k-tel" name="telefono" type="tel" required autocomplete="tel" inputmode="tel" /></div>
+        <div class="consign__wide consign__submit">
+          <button type="submit" class="btn btn--primary"><Glyph name="whatsapp" /> Enviar por WhatsApp</button>
+          <p class="form-note">Se abre WhatsApp con tu mensaje listo para enviar.</p>
+        </div>
+        <p class="form-ok consign__wide" data-wa-status hidden role="status"></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="section section--tight faq-sec" aria-labelledby="faq-h">
+    <div class="container faq">
+      <h2 id="faq-h" class="reveal">Preguntas frecuentes</h2>
+      <div class="faq__list">
+        {faqs.map((f) => (
+          <details>
+            <summary>{f.q}<Glyph name="plus" /></summary>
+            <p><mark class="pending">Pendiente</mark> {f.a.replace('Pendiente de confirmar con AutoCapital: ', '')}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { initWaForms } from '@/lib/waForm';
+  initWaForms();
+</script>
+
+<style>
+  .compare { display: grid; gap: 2.5rem; }
+  @media (min-width: 1024px) { .compare { grid-template-columns: 0.85fr 1.15fr; gap: 4.5rem; align-items: start; } }
+  .compare__head { display: grid; gap: 1rem; justify-items: start; }
+  .compare__head p { color: var(--color-ink-500); font-size: var(--text-lead); line-height: 1.5; }
+  .compare__table { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 30rem; }
+  thead th { text-align: left; font-size: var(--text-small); font-weight: 600; padding: 0 1rem 0.9rem 0; border-bottom: 1px solid var(--color-ink); }
+  thead th:first-of-type { color: var(--color-brand-ink); }
+  tbody th { text-align: left; font-weight: 560; color: var(--color-ink-500); font-size: var(--text-small); padding: 1.1rem 1rem 1.1rem 0; width: 8.5rem; }
+  tbody td { padding: 1.1rem 1rem 1.1rem 0; font-size: 1.02rem; }
+  tbody tr { border-bottom: 1px solid var(--color-line); }
+
+  .consign { display: grid; gap: 3rem; }
+  @media (min-width: 1024px) { .consign { grid-template-columns: 0.85fr 1.15fr; gap: 4.5rem; } }
+  .consign__req { display: grid; gap: 1rem; align-content: start; }
+  .consign__lead { color: var(--color-ink-500); font-size: var(--text-lead); line-height: 1.5; margin-bottom: 1rem; }
+  .consign__req h3 { font-size: 1.05rem; margin-top: 0.5rem; }
+  .consign__req ul { list-style: none; display: grid; gap: 0.7rem; }
+  .consign__req li { display: flex; gap: 0.7rem; align-items: start; color: var(--color-ink-700); }
+  .consign__req li :global(svg) { width: 1.2rem; height: 1.2rem; flex-shrink: 0; margin-top: 0.15rem; color: var(--color-success); }
+  .consign__form { display: grid; gap: 1.1rem; padding: clamp(1.25rem, 3vw, 2rem); background: var(--color-paper); border: 1px solid var(--color-line); border-radius: var(--radius-md); }
+  @media (min-width: 640px) { .consign__form { grid-template-columns: 1fr 1fr; } .consign__wide { grid-column: 1 / -1; } }
+  .consign__submit { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 0.4rem; }
+  .form-ok { font-size: var(--text-small); color: var(--color-success); }
+
+  .faq-sec { border-top: 1px solid var(--color-line); }
+  .faq { display: grid; gap: 2rem; }
+  @media (min-width: 1024px) { .faq { grid-template-columns: 0.85fr 1.15fr; gap: 4.5rem; } }
+  .faq h2 { font-size: var(--text-h3); }
+  .faq__list details { border-bottom: 1px solid var(--color-line); }
+  .faq__list details:first-child { border-top: 1px solid var(--color-line); }
+  .faq__list summary { display: flex; justify-content: space-between; gap: 1rem; padding: 1.15rem 0; cursor: pointer; font-weight: 560; font-size: 1.05rem; list-style: none; }
+  .faq__list summary::-webkit-details-marker { display: none; }
+  .faq__list summary :global(svg) { width: 1.2rem; height: 1.2rem; flex-shrink: 0; transition: transform 0.35s var(--ease-out); }
+  .faq__list details[open] summary :global(svg) { transform: rotate(45deg); }
+  .faq__list details p { padding-bottom: 1.25rem; color: var(--color-ink-500); max-width: 60ch; }
+  .pending { background: var(--color-brand-050); color: var(--color-brand-ink); font-size: var(--text-xs); font-weight: 600; padding: 0.15rem 0.45rem; border-radius: 3px; margin-right: 0.35rem; }
+</style>

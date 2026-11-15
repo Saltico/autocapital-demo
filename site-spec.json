@@ -1,0 +1,726 @@
+{
+  "$schema": "site-spec.schema.json",
+  "meta": {
+    "clientName": "AutoCapital",
+    "version": "1.0.0",
+    "createdAt": "2026-11-15T14:29:55Z",
+    "updatedAt": "2026-11-15T14:36:16.171Z",
+    "approvedAt": "2026-11-15T14:36:16.171Z"
+  },
+  "brand": {
+    "name": "AutoCapital",
+    "tagline": "El auto que mereces, a un clic de distancia",
+    "colors": {
+      "primary": "#E24B2D",
+      "secondary": "#0C1322",
+      "accent": "#2FB67C",
+      "background": "#F5F4F1",
+      "text": "#0C1322"
+    },
+    "typography": {
+      "heading": "Geist",
+      "body": "Geist"
+    },
+    "logo": {
+      "src": "https://autocapital.com.co/wp-content/uploads/2025/07/cropped-logo_ac-e1752954804208.png"
+    }
+  },
+  "site": {
+    "domain": "autocapital.com.co",
+    "language": "es",
+    "defaultTitle": "AutoCapital | Compra, venta y consignación de carros premium en Colombia",
+    "defaultDescription": "Concesionario digital en Bogotá: carros usados premium con historial verificado, compramos o consignamos tu carro y te ayudamos con la financiación. Entregas en toda Colombia.",
+    "favicon": "/favicon.svg",
+    "social": {
+      "instagram": "https://www.instagram.com/autocapital.co/",
+      "whatsapp": "https://wa.me/573008415421"
+    },
+    "contact": {
+      "phone": "+573008415421"
+    }
+  },
+  "pages": [
+    {
+      "route": "/",
+      "title": "AutoCapital | Carros premium usados en Bogotá y toda Colombia",
+      "description": "Compra un carro premium con historial verificado, vende o consigna el tuyo y financia tu próxima compra. Concesionario 100% digital en Bogotá.",
+      "hero": {
+        "type": "split-editorial",
+        "eyebrow": "Concesionario digital · Bogotá",
+        "heading": "El auto que mereces, a un clic de distancia",
+        "intro": "Carros premium con historial verificado, procesos sin presión y toda Colombia como vitrina.",
+        "primaryCta": {
+          "label": "Ver catálogo",
+          "href": "/catalogo"
+        },
+        "secondaryCta": {
+          "label": "Vender mi carro",
+          "href": "/vende-tu-carro"
+        },
+        "visual": "Foto de un vehículo real del inventario (no stock genérico); a su lado una ficha compacta con año · km · precio en Geist Mono",
+        "designDirection": "Sobrio y actual, sin estetica de plantilla IA: nada de gradientes morados, glassmorphism, emojis, iconos genericos en circulos ni grids de 3 tarjetas identicas. Fondo calido claro #F5F4F1, tinta azul noche #0C1322 y bandas oscuras puntuales (hero/CTA/footer). Naranja #E24B2D solo para la accion principal; para texto pequeno usar variante oscura #C23A1F por contraste AA. Verde #2FB67C (linea del logo) solo como detalle minimo (indicador 'disponible'). Geist para todo, Geist Mono para cifras. Bordes finos, radios pequenos (4-6px), mucho espacio, numeracion 01-04 como recurso editorial. Fotos reales del inventario.",
+        "navigation": {
+          "header": [
+            "Catálogo:/catalogo",
+            "Vender:/vende-tu-carro",
+            "Consignación:/consignacion",
+            "Financiación:/financiacion",
+            "Quiénes somos:/#quienes-somos"
+          ],
+          "headerCta": "WhatsApp",
+          "footerLegal": [
+            "Política de privacidad:https://autocapital.com.co/politica-de-privacidad/",
+            "Tratamiento de datos:https://autocapital.com.co/abeas-data/"
+          ],
+          "floatingWhatsApp": true,
+          "demoNotice": "Demo de propuesta de diseño: noindex y sin GTM."
+        }
+      },
+      "sections": [
+        {
+          "type": "service-index",
+          "id": "servicios",
+          "heading": "¿Qué necesitas hoy?",
+          "note": "Bloque principal de internal linking: 4 filas numeradas 01–04, cada una enlaza a su página. Layout de lista editorial, no grid de 4 iconos idénticos.",
+          "items": [
+            {
+              "n": "01",
+              "title": "Comprar un carro",
+              "text": "Inventario curado de vehículos premium, revisados y con documentación al día.",
+              "href": "/catalogo",
+              "cta": "Ver catálogo"
+            },
+            {
+              "n": "02",
+              "title": "Vender tu carro",
+              "text": "Te damos una oferta y te pagamos rápido, sin intermediarios ni regateo eterno.",
+              "href": "/vende-tu-carro",
+              "cta": "Cotizar mi carro"
+            },
+            {
+              "n": "03",
+              "title": "Consignar tu carro",
+              "text": "Lo publicamos, lo mostramos y negociamos por ti para que obtengas mejor precio.",
+              "href": "/consignacion",
+              "cta": "Cómo funciona"
+            },
+            {
+              "n": "04",
+              "title": "Financiar tu compra",
+              "text": "Simula tu cuota y te acompañamos en la solicitud con nuestras entidades aliadas.",
+              "href": "/financiacion",
+              "cta": "Simular cuota"
+            }
+          ]
+        },
+        {
+          "type": "featured-inventory",
+          "id": "destacados",
+          "heading": "Recién llegados",
+          "count": 6,
+          "source": "inventory",
+          "note": "Toma los 6 primeros de /catalogo → inventory-grid.items.",
+          "cta": {
+            "label": "Ver todo el inventario",
+            "href": "/catalogo"
+          }
+        },
+        {
+          "type": "about",
+          "id": "quienes-somos",
+          "heading": "¿Quiénes somos?",
+          "lead": "AutoCapital no es un concesionario común.",
+          "body": [
+            "Nacimos en Bogotá para redefinir la forma de comprar y vender autos premium en Colombia.",
+            "Operamos 100% en digital, con un inventario cuidadosamente seleccionado de vehículos de alta gama, listos para enamorarte desde el primer clic."
+          ],
+          "pillars": [
+            {
+              "title": "Inventario premium en línea",
+              "text": "Un catálogo de vehículos de alta gama que puedes explorar sin moverte de casa."
+            },
+            {
+              "title": "Asesoría 100% online",
+              "text": "Te acompañamos desde la elección hasta la entrega, sin presiones ni vendedores insistentes."
+            },
+            {
+              "title": "Trámites gestionados",
+              "text": "Traspasos, matrículas, seguros, impuestos y fotomultas, con cobertura nacional."
+            },
+            {
+              "title": "Entrega en todo el país",
+              "text": "Desde Bogotá hasta tu puerta, listo para rodar."
+            }
+          ]
+        },
+        {
+          "type": "testimonials",
+          "id": "opiniones",
+          "heading": "Lo que dicen nuestros clientes",
+          "items": [
+            {
+              "quote": "Compré un Audi Q3 2020 en AutoCapital y la experiencia fue excelente. Todo el proceso digital, rápido y seguro. Me entregaron el carro en perfectas condiciones y con la documentación lista.",
+              "title": "Compra rápida y confiable",
+              "rating": 5
+            },
+            {
+              "quote": "Adquirí un Mercedes-Benz A200 2019. Me sorprendió la transparencia en el historial del carro y la facilidad para hacer la transacción. Se nota que curan muy bien el inventario.",
+              "title": "Buen historial y transparencia",
+              "rating": 5
+            },
+            {
+              "quote": "Vendí mi Kia Sportage 2021 con AutoCapital. Me ofrecieron un precio justo y en pocos días ya tenía el dinero en mi cuenta. El proceso fue mucho más sencillo que en un concesionario tradicional.",
+              "title": "Venta sencilla y justa",
+              "rating": 5
+            }
+          ],
+          "note": "Los testimonios originales no tienen autor: no inventar nombres ni fotos."
+        },
+        {
+          "type": "cta-contact",
+          "id": "contacto",
+          "heading": "¿Hablamos? Sin compromiso.",
+          "text": "Escríbenos por WhatsApp y un asesor te responde. Cuéntanos qué carro buscas o cuál quieres vender.",
+          "form": {
+            "fields": [
+              "nombre",
+              "telefono",
+              "interes (comprar|vender|consignar|financiar)",
+              "mensaje"
+            ],
+            "submit": "Abre WhatsApp (wa.me/573008415421) con el mensaje prellenado; sin backend"
+          },
+          "secondary": {
+            "label": "Instagram @autocapital.co",
+            "href": "https://www.instagram.com/autocapital.co/"
+          }
+        }
+      ]
+    },
+    {
+      "route": "/consignacion",
+      "title": "Consigna tu carro en Bogotá | AutoCapital",
+      "description": "Deja tu carro en consignación con AutoCapital: lo valoramos, lo publicamos y negociamos por ti para que obtengas un mejor precio, sin perder tiempo.",
+      "hero": {
+        "type": "page-hero",
+        "eyebrow": "Consignación",
+        "heading": "Lo vendemos por ti, al mejor precio",
+        "intro": "¿Estás vendiendo tu vehículo? Déjalo en nuestras manos: lo mostramos, filtramos compradores y negociamos.",
+        "primaryCta": {
+          "label": "Consignar mi carro",
+          "href": "#formulario"
+        }
+      },
+      "sections": [
+        {
+          "type": "steps",
+          "heading": "Cómo funciona",
+          "items": [
+            {
+              "n": "01",
+              "title": "Valoración",
+              "text": "Revisamos tu carro y acordamos contigo un precio de venta realista según el mercado."
+            },
+            {
+              "n": "02",
+              "title": "Preparación y publicación",
+              "text": "Fotografía profesional, ficha completa y publicación en nuestro catálogo y canales."
+            },
+            {
+              "n": "03",
+              "title": "Negociación",
+              "text": "Atendemos a los interesados, filtramos y negociamos. Tú decides si aceptas la oferta."
+            },
+            {
+              "n": "04",
+              "title": "Traspaso y pago",
+              "text": "Gestionamos el traspaso y la documentación. Recibes tu dinero de forma segura."
+            }
+          ]
+        },
+        {
+          "type": "comparison",
+          "heading": "¿Consignar o vender directo?",
+          "note": "Tabla sobria de 2 columnas que enlaza a /vende-tu-carro.",
+          "rows": [
+            {
+              "label": "Precio",
+              "consignacion": "Más alto, precio de mercado",
+              "venta": "Oferta inmediata"
+            },
+            {
+              "label": "Tiempo",
+              "consignacion": "Depende de la demanda",
+              "venta": "Pago en pocos días"
+            },
+            {
+              "label": "Tu esfuerzo",
+              "consignacion": "Ninguno: lo hacemos por ti",
+              "venta": "Ninguno"
+            }
+          ],
+          "cta": {
+            "label": "Prefiero vender directo",
+            "href": "/vende-tu-carro"
+          }
+        },
+        {
+          "type": "requirements",
+          "heading": "Qué necesitas",
+          "items": [
+            "Tarjeta de propiedad a tu nombre",
+            "SOAT y revisión técnico-mecánica vigentes",
+            "Impuestos al día y sin comparendos pendientes",
+            "Copia de tu documento de identidad"
+          ],
+          "note": "Requisitos estándar sugeridos; validar con el cliente."
+        },
+        {
+          "type": "vehicle-form",
+          "id": "formulario",
+          "heading": "Cuéntanos de tu carro",
+          "fields": [
+            "marca",
+            "modelo",
+            "año",
+            "kilometraje",
+            "ciudad",
+            "nombre",
+            "telefono"
+          ],
+          "submit": "WhatsApp prellenado con intención 'consignar'"
+        },
+        {
+          "type": "faq",
+          "items": [
+            {
+              "q": "¿Cuánto cobran por consignar?",
+              "a": "Pendiente: comisión a definir con AutoCapital."
+            },
+            {
+              "q": "¿Puedo seguir usando mi carro mientras se vende?",
+              "a": "Pendiente: política a definir con AutoCapital."
+            },
+            {
+              "q": "¿Reciben carros de fuera de Bogotá?",
+              "a": "Pendiente: cobertura a definir."
+            }
+          ],
+          "note": "Respuestas marcadas como pendientes en la demo."
+        }
+      ]
+    },
+    {
+      "route": "/vende-tu-carro",
+      "title": "Vende tu carro rápido y a precio justo | AutoCapital",
+      "description": "Compramos tu carro: cuéntanos marca, año y kilometraje, recibe una oferta sin compromiso y te pagamos en pocos días. Proceso 100% digital.",
+      "hero": {
+        "type": "page-hero",
+        "eyebrow": "Compramos tu carro",
+        "heading": "¿Cuánto vale tu carro?",
+        "intro": "Cuéntanos qué carro es y te contactamos con una oferta. Sin compromiso, sin regateo eterno."
+      },
+      "sections": [
+        {
+          "type": "quote-wizard",
+          "heading": "Cotiza en 3 pasos",
+          "steps": [
+            "Tu carro",
+            "Cómo está",
+            "Tú"
+          ],
+          "note": "Formulario por pasos (inspirado en la referencia, no copiado): 01 Tu carro (marca, modelo, año, versión) → 02 Cómo está (km, dueños, estado general) → 03 Tú (nombre, teléfono, ciudad). Panel lateral que resume el carro mientras se llena. Envío = WhatsApp prellenado. Sin JS se ve como formulario de una sola página."
+        },
+        {
+          "type": "benefits",
+          "heading": "Por qué vendernos tu carro",
+          "items": [
+            {
+              "title": "Precio justo",
+              "text": "Oferta basada en el mercado real, explicada con claridad."
+            },
+            {
+              "title": "Pago rápido",
+              "text": "En pocos días tienes el dinero en tu cuenta."
+            },
+            {
+              "title": "Cero trámites para ti",
+              "text": "Nos encargamos del traspaso y la documentación."
+            }
+          ]
+        },
+        {
+          "type": "testimonial-single",
+          "quote": "Vendí mi Kia Sportage 2021 con AutoCapital. Me ofrecieron un precio justo y en pocos días ya tenía el dinero en mi cuenta.",
+          "title": "Venta sencilla y justa"
+        },
+        {
+          "type": "cross-link",
+          "heading": "¿Quieres obtener más por tu carro?",
+          "text": "Con la consignación lo vendemos por ti a precio de mercado.",
+          "cta": {
+            "label": "Conoce la consignación",
+            "href": "/consignacion"
+          }
+        }
+      ]
+    },
+    {
+      "route": "/financiacion",
+      "title": "Financia tu carro | Simulador de cuota | AutoCapital",
+      "description": "Simula la cuota de tu próximo carro y solicita tu preaprobación con AutoCapital. Te acompañamos en todo el trámite de financiación.",
+      "hero": {
+        "type": "page-hero",
+        "eyebrow": "Financiación",
+        "heading": "Estrena sin pagarlo todo hoy",
+        "intro": "Simula tu cuota en segundos y te acompañamos en la solicitud con nuestras entidades aliadas."
+      },
+      "sections": [
+        {
+          "type": "loan-simulator",
+          "heading": "Simula tu cuota",
+          "inputs": {
+            "valorVehiculo": {
+              "default": 120000000,
+              "min": 30000000,
+              "max": 400000000,
+              "step": 1000000
+            },
+            "cuotaInicialPct": {
+              "default": 30,
+              "min": 10,
+              "max": 70
+            },
+            "plazoMeses": {
+              "options": [
+                24,
+                36,
+                48,
+                60,
+                72
+              ],
+              "default": 60
+            },
+            "tasaMensualReferencia": {
+              "default": 1.6,
+              "editable": false
+            }
+          },
+          "outputs": [
+            "cuota mensual estimada",
+            "monto a financiar"
+          ],
+          "disclaimer": "Valores orientativos. La tasa, la cuota y la aprobación final dependen de la entidad financiera y de tu perfil crediticio.",
+          "note": "Cuota fija (sistema francés) calculada en el cliente; cifras en Geist Mono y formato COP. Tasa de referencia placeholder a validar con el cliente.",
+          "cta": {
+            "label": "Solicitar preaprobación",
+            "href": "#solicitud"
+          }
+        },
+        {
+          "type": "steps",
+          "heading": "Cómo funciona",
+          "items": [
+            {
+              "n": "01",
+              "title": "Simula",
+              "text": "Define valor, cuota inicial y plazo."
+            },
+            {
+              "n": "02",
+              "title": "Envía tus datos",
+              "text": "Te pedimos lo mínimo para estudiar tu crédito."
+            },
+            {
+              "n": "03",
+              "title": "Preaprobación",
+              "text": "Presentamos tu solicitud a nuestras entidades aliadas."
+            },
+            {
+              "n": "04",
+              "title": "Estrena",
+              "text": "Firmas, gestionamos el traspaso y te entregamos el carro."
+            }
+          ]
+        },
+        {
+          "type": "partners",
+          "heading": "Entidades aliadas",
+          "note": "Placeholders neutros (sin logos reales) hasta que el cliente confirme aliados."
+        },
+        {
+          "type": "lead-form",
+          "id": "solicitud",
+          "heading": "Solicita tu preaprobación",
+          "fields": [
+            "nombre",
+            "telefono",
+            "ciudad",
+            "tipo de ingreso (empleado|independiente|pensionado)",
+            "carro de interés (opcional, select del inventario)"
+          ],
+          "submit": "WhatsApp prellenado con los valores del simulador"
+        },
+        {
+          "type": "cross-link",
+          "heading": "¿Ya sabes qué carro quieres?",
+          "cta": {
+            "label": "Ver catálogo",
+            "href": "/catalogo"
+          }
+        }
+      ]
+    },
+    {
+      "route": "/catalogo",
+      "title": "Catálogo de carros usados premium | AutoCapital",
+      "description": "Explora nuestro inventario de carros usados premium: Mazda, Toyota, BMW, Mercedes-Benz, Volvo y más. Filtra por marca, año, precio y kilometraje.",
+      "hero": {
+        "type": "compact",
+        "eyebrow": "Catálogo",
+        "heading": "Inventario disponible",
+        "intro": "Vehículos seleccionados, con historial revisado y documentación al día."
+      },
+      "sections": [
+        {
+          "type": "inventory-grid",
+          "source": "inventory",
+          "filters": [
+            "marca",
+            "año (rango)",
+            "precio (rango)",
+            "kilometraje (máx)"
+          ],
+          "sort": [
+            "Más recientes",
+            "Menor precio",
+            "Mayor precio",
+            "Menor kilometraje"
+          ],
+          "card": {
+            "fields": [
+              "foto",
+              "marca + modelo",
+              "año",
+              "km",
+              "precio COP"
+            ],
+            "numbers": "Geist Mono",
+            "cta": "Me interesa → WhatsApp prellenado con el nombre del vehículo"
+          },
+          "note": "Filtrado client-side ligero (sin framework). Sin páginas de detalle en la demo: en producción WordPress conserva sus fichas /vehiculo/<slug>. Contador de resultados y estado vacío con CTA a WhatsApp. Imágenes descargadas y optimizadas en build.",
+          "items": [
+            {
+              "slug": "toyota-corolla-se-g",
+              "name": "Toyota Corolla SE-G",
+              "brand": "Toyota",
+              "year": 2022,
+              "priceCOP": 102800000,
+              "km": 42300,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-JYU763-768x996.jpg"
+            },
+            {
+              "slug": "mercedes-benz-glc-300e",
+              "name": "Mercedes-Benz GLC 300e",
+              "brand": "Mercedes-Benz",
+              "year": 2022,
+              "priceCOP": 204900000,
+              "km": 22100,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-LNO684-768x1024.jpg"
+            },
+            {
+              "slug": "volvo-ex30-extended-range-core",
+              "name": "Volvo EX30 Extended Range Core",
+              "brand": "Volvo",
+              "year": 2024,
+              "priceCOP": 173500000,
+              "km": 6100,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-NJU158-768x1024.jpg"
+            },
+            {
+              "slug": "bmw-325i-cabrio",
+              "name": "BMW 325i Cabrio",
+              "brand": "BMW",
+              "year": 2011,
+              "priceCOP": 74900000,
+              "km": 84400,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADARGT120-768x1024.jpg"
+            },
+            {
+              "slug": "mazda-cx-30-touring-at-3",
+              "name": "Mazda CX-30 Touring AT",
+              "brand": "Mazda",
+              "year": 2025,
+              "priceCOP": 117900000,
+              "km": 6100,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADANKT019-768x878.jpg"
+            },
+            {
+              "slug": "toyota-corolla-seg",
+              "name": "Toyota Corolla SE-G",
+              "brand": "Toyota",
+              "year": 2022,
+              "priceCOP": 105900000,
+              "km": 43400,
+              "image": "https://autocapital.com.co/wp-content/uploads/IMG_1157-768x1024.jpg"
+            },
+            {
+              "slug": "mercedes-benz-cla-35-amg",
+              "name": "Mercedes-Benz CLA 35 AMG",
+              "brand": "Mercedes-Benz",
+              "year": 2023,
+              "priceCOP": 198600000,
+              "km": 12400,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-LMY578-768x1024.jpg"
+            },
+            {
+              "slug": "mazda-2-grand-touring-lx",
+              "name": "Mazda 2 Grand Touring LX",
+              "brand": "Mazda",
+              "year": 2020,
+              "priceCOP": 69700000,
+              "km": 49500,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-GDZ548-768x1024.jpg"
+            },
+            {
+              "slug": "land-rover-freelander-2-hse",
+              "name": "Land Rover Freelander 2 HSE",
+              "brand": "Land Rover",
+              "year": 2014,
+              "priceCOP": 71900000,
+              "km": 76000,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-ZYQ337-768x886.jpg"
+            },
+            {
+              "slug": "bmw-m240i",
+              "name": "BMW M240i",
+              "brand": "BMW",
+              "year": 2024,
+              "priceCOP": 241900000,
+              "km": 4200,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-NHX333-768x944.jpg"
+            },
+            {
+              "slug": "mini-jhon-cooper-works",
+              "name": "MINI John Cooper Works",
+              "brand": "Mini",
+              "year": 2022,
+              "priceCOP": 157200000,
+              "km": 36000,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-KZP858-768x794.jpg"
+            },
+            {
+              "slug": "mazda-cx-30-touring-at-2",
+              "name": "Mazda CX-30 Touring AT",
+              "brand": "Mazda",
+              "year": 2022,
+              "priceCOP": 94600000,
+              "km": 11600,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-JXX063-768x973.jpg"
+            },
+            {
+              "slug": "mazda-cx-30-grand-touring-lx",
+              "name": "Mazda CX-30 Grand Touring LX",
+              "brand": "Mazda",
+              "year": 2022,
+              "priceCOP": 103500000,
+              "km": 56000,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-JXX878-768x938.jpg"
+            },
+            {
+              "slug": "mazda-cx-30-touring-at",
+              "name": "Mazda CX-30 Touring AT",
+              "brand": "Mazda",
+              "year": 2021,
+              "priceCOP": 93400000,
+              "km": 39000,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-JLK898-768x847.jpg"
+            },
+            {
+              "slug": "toyota-fortuner-street",
+              "name": "Toyota Fortuner Street",
+              "brand": "Toyota",
+              "year": 2017,
+              "priceCOP": 136800000,
+              "km": 890000,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-JEN905-768x768.jpg"
+            },
+            {
+              "slug": "toyota-fortuner-sr5",
+              "name": "Toyota Fortuner SR5",
+              "brand": "Toyota",
+              "year": 2012,
+              "priceCOP": 84600000,
+              "km": 151000,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-RNO451-768x1023.jpg"
+            },
+            {
+              "slug": "toyota-fortuner-sr",
+              "name": "Toyota Fortuner SR",
+              "brand": "Toyota",
+              "year": 2022,
+              "priceCOP": 213900000,
+              "km": 48000,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-KZR148-768x924.jpg"
+            },
+            {
+              "slug": "toyota-fortuner-street-2",
+              "name": "Toyota Fortuner Street",
+              "brand": "Toyota",
+              "year": 2019,
+              "priceCOP": 173700000,
+              "km": 106000,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-GFK153-768x903.jpg"
+            },
+            {
+              "slug": "mazda-3-sport-touring-at",
+              "name": "Mazda 3 Sport Touring AT",
+              "brand": "Mazda",
+              "year": 2017,
+              "priceCOP": 69900000,
+              "km": 37500,
+              "image": "https://autocapital.com.co/wp-content/uploads/PORTADA-DNR339-768x1024.jpg"
+            }
+          ]
+        },
+        {
+          "type": "cross-link",
+          "heading": "¿No encuentras el que buscas?",
+          "text": "Cuéntanos qué carro quieres y te avisamos cuando llegue.",
+          "cta": {
+            "label": "Escríbenos",
+            "href": "https://wa.me/573008415421"
+          }
+        },
+        {
+          "type": "cross-link",
+          "heading": "¿Necesitas financiación?",
+          "cta": {
+            "label": "Simular cuota",
+            "href": "/financiacion"
+          }
+        }
+      ]
+    }
+  ],
+  "features": {
+    "has_contact_form": true,
+    "contact_channels": {
+      "email": false,
+      "phone": false,
+      "whatsapp": true,
+      "map": false
+    },
+    "dark_mode": false,
+    "i18n": {
+      "enabled": false,
+      "defaultLocale": "es",
+      "locales": [
+        "es"
+      ]
+    }
+  },
+  "seo": {
+    "robots": "noindex, nofollow"
+  }
+}
