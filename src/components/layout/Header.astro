@@ -81,8 +81,11 @@ const wa = whatsappLink('Hola AutoCapital, quiero más información.');
     backdrop-filter: saturate(1.4) blur(10px);
     -webkit-backdrop-filter: saturate(1.4) blur(10px);
     border-bottom: 1px solid var(--color-line);
-    transition: background-color 0.35s var(--ease-out), color 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+    transition: background-color 0.35s var(--ease-out), color 0.35s var(--ease-out), border-color 0.35s var(--ease-out), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   }
+  /* Se esconde al bajar y vuelve al subir: más foto, menos barra */
+  .header.is-hidden { transform: translateY(-100%); }
+  .header:focus-within { transform: none; }
 
   /* Overlay: sobre el hero oscuro de la home */
   .header--overlay {
@@ -229,7 +232,15 @@ const wa = whatsappLink('Hola AutoCapital, quiero más información.');
 <script>
   const header = document.querySelector<HTMLElement>('[data-header]');
   if (header) {
-    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      header.classList.toggle('is-scrolled', y > 24);
+      if (Math.abs(y - last) > 6) {
+        header.classList.toggle('is-hidden', y > last && y > 480);
+        last = y;
+      }
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
   }

@@ -88,7 +88,7 @@ export default defineConfig({
     // Con inlineStylesheets "auto", el CSS propio de una página menor a este umbral
     // (bytes) se inlinea en su HTML en vez de generar una 2.ª hoja externa (p. ej.
     // contact). Así cada página carga una sola hoja externa (la compartida).
-    build: { assetsInlineLimit: 10240 },
+    build: { assetsInlineLimit: 16384 },
     resolve: {
       alias: { '@': path.resolve(__dirname, './src') },
     },

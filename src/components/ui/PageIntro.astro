@@ -1,6 +1,7 @@
 ---
 // src/components/ui/PageIntro.astro
-// Cabecera de página interna: miga de pan + título + intro, con foto opcional.
+// Hero de página interna: foto a sangre completa (fotografía de la web actual)
+// con parallax suave, velo azul noche y el texto anclado abajo a la izquierda.
 import Img from '@/components/ui/Img.astro';
 import { href } from '@/lib/url';
 
@@ -8,59 +9,82 @@ export interface Props {
   crumb: string;
   heading: string;
   intro: string;
-  image?: string;
+  image: string;
   imageAlt?: string;
   imagePosition?: string;
+  /** 'tall' para páginas de servicio, 'short' para el catálogo. */
+  size?: 'tall' | 'short';
 }
-const { crumb, heading, intro, image, imageAlt = '', imagePosition = '50% 60%' } = Astro.props;
+const { crumb, heading, intro, image, imageAlt = '', imagePosition = '50% 55%', size = 'tall' } = Astro.props;
 ---
 
-<section class:list={['intro on-dark', image && 'intro--media']}>
-  <div class="container intro__grid">
-    <div class="intro__text">
-      <nav aria-label="Miga de pan" class="intro__crumb">
-        <a href={href('/')}>Inicio</a>
-        <span aria-hidden="true">/</span>
-        <span aria-current="page">{crumb}</span>
-      </nav>
-      <h1>{heading}</h1>
-      <p class="intro__lead">{intro}</p>
-      <div class="intro__actions"><slot /></div>
+<section class:list={['intro on-dark', `intro--${size}`]}>
+  <div class="intro__bg">
+    <div class="intro__plx" data-parallax="0.28">
+      <Img src={image} alt={imageAlt} priority sizes="100vw" widths={[768, 1024, 1440, 1920]} quality={65} style={`object-position:${imagePosition}`} />
     </div>
-    {image && (
-      <div class="intro__media">
-        <Img src={image} alt={imageAlt} priority sizes="(min-width: 1024px) 40vw, 100vw" widths={[480, 768, 1024]} style={`object-position:${imagePosition}`} />
-      </div>
-    )}
+  </div>
+  <div class="intro__shade" aria-hidden="true"></div>
+
+  <div class="container intro__text">
+    <nav aria-label="Miga de pan" class="intro__crumb enter" style="--d:120ms">
+      <a href={href('/')}>Inicio</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{crumb}</span>
+    </nav>
+    <h1 class="enter enter--mask" style="--d:200ms"><span>{heading}</span></h1>
+    <p class="intro__lead enter" style="--d:380ms">{intro}</p>
+    <div class="intro__actions enter" style="--d:480ms"><slot /></div>
   </div>
 </section>
 
 <style>
   .intro {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    align-items: end;
+    min-height: clamp(32rem, 82svh, 54rem);
+    padding-top: calc(76px + 3rem);
+    padding-bottom: clamp(3rem, 7vw, 5.5rem);
     background: var(--color-graphite);
     color: var(--color-on-dark);
-    padding-block: clamp(3.5rem, 8vw, 6.5rem) clamp(3rem, 7vw, 5.5rem);
     overflow: hidden;
   }
-  .intro__grid { display: grid; gap: 2.5rem; align-items: end; }
-  .intro--media .intro__grid { align-items: center; }
-  @media (min-width: 1024px) {
-    .intro--media .intro__grid { grid-template-columns: 1.15fr 0.85fr; gap: 4rem; }
+  .intro--short { min-height: clamp(26rem, 58svh, 38rem); }
+
+  .intro__bg { position: absolute; inset: 0; z-index: -2; overflow: hidden; }
+  .intro__plx { position: absolute; inset: -14% 0 -6%; }
+  .intro__plx :global(picture),
+  .intro__plx :global(img) { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Velo: arriba para el menú, abajo-izquierda para el texto */
+  .intro__shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(180deg, rgba(12, 19, 34, 0.7) 0%, rgba(12, 19, 34, 0) 26%),
+      linear-gradient(0deg, rgba(12, 19, 34, 0.96) 0%, rgba(12, 19, 34, 0.78) 34%, rgba(12, 19, 34, 0.3) 62%, rgba(12, 19, 34, 0) 84%),
+      linear-gradient(90deg, rgba(12, 19, 34, 0.72) 0%, rgba(12, 19, 34, 0.3) 48%, rgba(12, 19, 34, 0) 74%);
   }
-  .intro__text { display: grid; gap: 1.4rem; max-width: 44rem; }
+
+  .intro__text { display: grid; gap: 1.3rem; justify-items: start; }
   .intro__crumb { display: flex; gap: 0.55rem; font-size: var(--text-small); color: var(--color-on-dark-muted); }
   .intro__crumb a { color: var(--color-on-dark-muted); }
   .intro__crumb a:hover { color: var(--color-on-dark); }
   .intro__crumb [aria-current] { color: var(--color-on-dark); }
-  .intro h1 { font-size: var(--text-h1); max-width: 16ch; }
-  .intro__lead { font-size: var(--text-lead); line-height: 1.5; color: var(--color-on-dark-muted); max-width: 38rem; }
+  .intro h1 { font-size: var(--text-display); line-height: 1; letter-spacing: -0.035em; max-width: 15ch; }
+  .intro__lead { font-size: var(--text-lead); line-height: 1.5; color: #c9cdd6; max-width: 36rem; }
   .intro__actions:empty { display: none; }
   .intro__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.4rem; }
-  .intro__media {
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    aspect-ratio: 4 / 3.3;
-    background: #0e1422;
+
+  /* Momento de entrada: la foto "revela" desde un leve acercamiento */
+  @media (prefers-reduced-motion: no-preference) {
+    .intro__plx :global(img) { animation: develop 1.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
   }
-  .intro__media :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  @keyframes develop {
+    from { transform: scale(1.1); filter: brightness(0.55) saturate(0.8); }
+    to { transform: none; filter: none; }
+  }
 </style>

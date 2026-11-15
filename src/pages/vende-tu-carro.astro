@@ -21,14 +21,19 @@ const benefits = [
 ];
 ---
 
-<BaseLayout title={title} description={description} waMessage="Hola AutoCapital, quiero vender mi carro.">
+<BaseLayout headerVariant="overlay" title={title} description={description} waMessage="Hola AutoCapital, quiero vender mi carro.">
   <PageIntro
     crumb="Vende tu carro"
     heading="¿Cuánto vale tu carro?"
     intro="Cuéntanos qué carro es y te contactamos con una oferta. Sin compromiso, sin regateo eterno."
-  />
+    image="hero-venta.jpg"
+    imageAlt="Porsche 911 blanco estacionado frente a un edificio moderno"
+    imagePosition="45% 88%"
+  >
+    <a href="#cotiza" class="btn btn--primary">Cotizar mi carro</a>
+  </PageIntro>
 
-  <section class="section quote-sec" aria-labelledby="cotiza-h">
+  <section class="section quote-sec" id="cotiza" aria-labelledby="cotiza-h">
     <div class="container">
       <h2 id="cotiza-h" class="sr-only">Cotiza en 3 pasos</h2>
       <div class="wizard" data-wizard>
@@ -175,8 +180,15 @@ const benefits = [
     form.noValidate = false;
 
     const show = (i: number) => {
+      const dir = i >= current ? 'fwd' : 'back';
       current = i;
-      steps.forEach((s, k) => (s.hidden = k !== i));
+      steps.forEach((s, k) => {
+        s.hidden = k !== i;
+        s.classList.remove('in-fwd', 'in-back');
+      });
+      // Reinicia la animación de entrada en la dirección del avance
+      void steps[i].offsetWidth;
+      steps[i].classList.add(`in-${dir}`);
       dots.forEach((d, k) => {
         d.classList.toggle('is-current', k === i);
         d.classList.toggle('is-done', k < i);
@@ -220,6 +232,7 @@ const benefits = [
     form.addEventListener('change', update);
 
     show(0);
+    steps[0].classList.remove('in-fwd');
     update();
   }
   initWaForms();
@@ -240,6 +253,11 @@ const benefits = [
 
   .wizard__step { border: 0; min-width: 0; display: grid; gap: 1.25rem; }
   .wizard__step[hidden] { display: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    .wizard__step:global(.in-fwd) { animation: step-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; --from: 28px; }
+    .wizard__step:global(.in-back) { animation: step-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; --from: -28px; }
+  }
+  @keyframes step-in { from { opacity: 0; transform: translateX(var(--from)); } to { opacity: 1; transform: none; } }
   .wizard__step + .wizard__step { padding-top: 1.5rem; border-top: 1px solid var(--color-line); }
   .is-enhanced .wizard__step + .wizard__step { padding-top: 0; border-top: 0; }
   .wizard__step > legend { font-size: var(--text-h3); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 1.25rem; }

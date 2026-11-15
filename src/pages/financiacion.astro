@@ -25,14 +25,19 @@ const steps = [
 ];
 ---
 
-<BaseLayout title={title} description={description} waMessage="Hola AutoCapital, quiero información sobre financiación.">
+<BaseLayout headerVariant="overlay" title={title} description={description} waMessage="Hola AutoCapital, quiero información sobre financiación.">
   <PageIntro
     crumb="Financiación"
     heading="Estrena sin pagarlo todo hoy"
     intro="Simula tu cuota en segundos y te acompañamos en la solicitud con nuestras entidades aliadas."
-  />
+    image="hero-financiacion.jpg"
+    imageAlt="Mercedes-Benz coupé en una carretera costera al atardecer"
+    imagePosition="55% 62%"
+  >
+    <a href="#simulador" class="btn btn--primary">Simular mi cuota</a>
+  </PageIntro>
 
-  <section class="section sim-sec" aria-labelledby="sim-h">
+  <section class="section sim-sec" id="simulador" aria-labelledby="sim-h">
     <div class="container">
       <div class="sim" data-sim data-rate={RATE}>
         <form class="sim__inputs" aria-labelledby="sim-h" onsubmit="return false">
@@ -150,6 +155,27 @@ const steps = [
     const summary = document.querySelector<HTMLInputElement>('[data-sim-summary]');
     const carSel = document.querySelector<HTMLSelectElement>('#a-carro');
 
+    // La cuota "corre" hasta su nuevo valor: deja ver cuánto cambió con cada ajuste
+    const cuotaEl = out('cuota');
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let shown = 0, raf = 0;
+    const tween = (to: number) => {
+      cancelAnimationFrame(raf);
+      if (calm.matches || !shown) { shown = to; cuotaEl.textContent = cop(to); return; }
+      const from = shown, t0 = performance.now(), dur = 420;
+      cuotaEl.classList.toggle('is-up', to > from);
+      cuotaEl.classList.toggle('is-down', to < from);
+      const step = (t: number) => {
+        const k = Math.min(1, (t - t0) / dur);
+        const e = 1 - Math.pow(1 - k, 4);
+        shown = from + (to - from) * e;
+        cuotaEl.textContent = cop(shown);
+        if (k < 1) raf = requestAnimationFrame(step);
+        else cuotaEl.classList.remove('is-up', 'is-down');
+      };
+      raf = requestAnimationFrame(step);
+    };
+
     const calc = () => {
       const f = new FormData(form);
       const valor = Number(f.get('valor'));
@@ -163,7 +189,7 @@ const steps = [
       out('inicial').textContent = `${pct}%`;
       out('inicialCOP').textContent = cop(inicial);
       out('monto').textContent = cop(monto);
-      out('cuota').textContent = cop(cuota);
+      tween(cuota);
 
       // Relleno del track
       form.querySelectorAll<HTMLInputElement>('input[type=range]').forEach((r) => {
@@ -194,6 +220,9 @@ const steps = [
 
 <style>
   .sim-sec { padding-top: clamp(2.5rem, 5vw, 4rem); }
+  .sim__cuota { transition: color 0.3s ease; }
+  .sim__cuota:global(.is-up) { color: #f6a08b; }
+  .sim__cuota:global(.is-down) { color: #8fe0b8; }
   .sim { display: grid; gap: 2rem; align-items: stretch; }
   @media (min-width: 1024px) { .sim { grid-template-columns: 1.25fr 1fr; gap: 3.5rem; } }
   .sim__inputs { display: grid; gap: 2.25rem; align-content: start; }

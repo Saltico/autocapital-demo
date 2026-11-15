@@ -18,7 +18,7 @@ const msg = `Hola AutoCapital, me interesa el ${car.name} ${car.year} (${formatK
 ---
 
 <article
-  class="car"
+  class="car reveal"
   data-car
   data-brand={car.brand}
   data-year={car.year}
@@ -64,6 +64,12 @@ const msg = `Hola AutoCapital, me interesa el ${car.name} ${car.year} (${formatK
     transition: border-color 0.3s var(--ease-out), box-shadow 0.4s var(--ease-out);
   }
   .car[hidden] { display: none; }
+  /* Escalonado por columna cuando la grilla entra en pantalla */
+  .car:global(.reveal) { transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out), border-color 0.3s var(--ease-out), box-shadow 0.4s var(--ease-out); }
+  @media (min-width: 640px) {
+    .car:nth-child(3n + 2) { transition-delay: 90ms, 90ms, 0s, 0s; }
+    .car:nth-child(3n) { transition-delay: 180ms, 180ms, 0s, 0s; }
+  }
   .car:hover { border-color: #bdbab1; box-shadow: var(--shadow-md); }
   .car__media {
     aspect-ratio: 4 / 4.6;

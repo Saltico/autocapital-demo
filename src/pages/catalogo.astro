@@ -34,11 +34,15 @@ const itemList = {
 };
 ---
 
-<BaseLayout title={title} description={description} jsonLd={itemList} waMessage="Hola AutoCapital, estoy viendo el catálogo y tengo una pregunta.">
+<BaseLayout headerVariant="overlay" title={title} description={description} jsonLd={itemList} waMessage="Hola AutoCapital, estoy viendo el catálogo y tengo una pregunta.">
   <PageIntro
     crumb="Catálogo"
     heading="Inventario disponible"
     intro="Vehículos seleccionados, con historial revisado y documentación al día. Si uno te interesa, escríbenos y te contamos todo."
+    image="hero-catalogo.jpg"
+    imageAlt="Toyota 4Runner blanca en un campo al amanecer"
+    imagePosition="50% 58%"
+    size="short"
   />
 
   <section class="catalog section--tight" aria-label="Vehículos">
@@ -89,7 +93,7 @@ const itemList = {
       </div>
 
       <div class="grid-cars" data-grid>
-        {inventory.map((car, i) => <CarCard car={car} priority={i === 0} headingLevel="h2" />)}
+        {inventory.map((car, i) => <CarCard car={car} headingLevel="h2" />)}
       </div>
 
       <div class="empty" data-empty hidden>
@@ -120,8 +124,11 @@ const itemList = {
   if (form && grid && count && empty && reset) {
     const cards = Array.from(grid.querySelectorAll<HTMLElement>('[data-car]'));
     const num = (el: HTMLElement, k: string) => Number(el.dataset[k]);
+    // Cada ficha tiene nombre propio para que la View Transition la mueva a su nueva posición
+    cards.forEach((c, i) => c.style.setProperty('view-transition-name', `car-${i}`));
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    const apply = () => {
+    const render = () => {
       const f = new FormData(form);
       const marca = String(f.get('marca') ?? '');
       const anio = Number(f.get('anio') || 0);
@@ -150,14 +157,25 @@ const itemList = {
       reset.hidden = !(marca || anio || f.get('precio') || f.get('km'));
     };
 
+    const apply = () => {
+      const doc = document as Document & { startViewTransition?: (cb: () => void) => { ready: Promise<void> } };
+      if (doc.startViewTransition && !calm.matches) {
+        // Cambios rápidos seguidos cancelan la transición anterior: no es un error
+        doc.startViewTransition(render).ready.catch(() => {});
+      } else render();
+    };
+
     form.addEventListener('change', apply);
     reset.addEventListener('click', () => { form.reset(); apply(); });
-    apply();
+    render();
   }
 </script>
 
 <style>
   .catalog { padding-top: clamp(2rem, 4vw, 3rem); }
+  /* Reordenar/filtrar: las fichas se desplazan a su sitio; las que salen se desvanecen */
+  :global(::view-transition-group(*)) { animation-duration: 0.5s; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+  :global(::view-transition-old(root)), :global(::view-transition-new(root)) { animation-duration: 0.25s; }
   .filters {
     display: grid;
     gap: 0.9rem;
